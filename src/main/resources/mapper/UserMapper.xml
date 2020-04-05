@@ -1,0 +1,40 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhurong.demo01.mapper.UserMapper">
+    <resultMap id="result" type="com.zhurong.demo01.entity.User">
+        <result property="name" column="name" />
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+        <result property="dataCount" column="dataCount"/>
+        <result property="image" column="image"/>
+        <result property="code" column="code"/>
+        <result property="email" column="email"/>
+        <result property="birthday" column="birthday"/>
+    </resultMap>
+    <select id="ListUser" parameterType="com.zhurong.demo01.entity.User" resultMap="result">
+        SELECT id,name,phone,image,code,email,birthday,(SELECT COUNT(*) FROM USER ) dataCount FROM user limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="findUserByName" resultMap="result">
+        SELECT * FROM user where code=#{code}
+    </select>
+    <select id="chackUserByCode" resultType="Integer">
+        SELECT COUNT(*) FROM user where code=#{code}
+    </select>
+    <insert id="insertUser" parameterType="com.zhurong.demo01.entity.User"
+            keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO user(name,password,phone,image,code,email,birthday)
+        VALUES (
+        #{name, jdbcType=VARCHAR},#{password, jdbcType=VARCHAR},#{phone, jdbcType=VARCHAR},#{image, jdbcType=VARCHAR},#{code, jdbcType=VARCHAR},#{email, jdbcType=VARCHAR},#{birthday, jdbcType=DATE} )
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from user where code=#{code}
+    </delete>
+
+    <update id="Update" parameterType="com.zhurong.demo01.entity.User">
+        update user set name=#{name},password=#{password},phone=#{phone},image=#{image},code=#{code},email=#{email},birthday=#{birthday} where id=#{id}
+    </update>
+</mapper>
